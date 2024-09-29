@@ -1,0 +1,862 @@
+{
+	"info": {
+		"_postman_id": "5cb4e13b-2862-477e-adba-4c4cfebb0b8e",
+		"name": "API REST Products",
+		"description": "API for managing products",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "v1/products",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Retrieve details for a product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"let productId = pm.environment.get(\"productId\");\r",
+											"\r",
+											"pm.test(\"Product has correct ID\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.id).to.eql(productId);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let productId = pm.environment.get(\"productId\");\r",
+											"if (productId) {\r",
+											"    console.log(\"Current URL before replacement: \", pm.request.url.toString());\r",
+											"console.log(\"Product ID to replace: \", productId);\r",
+											"    pm.request.url = pm.request.url.toString().replace(':id', productId);\r",
+											"} else {\r",
+											"    console.error(\"Product ID is not defined in the environment\");\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/v1/products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ":id",
+											"description": "(Required) Product ID to retrieve details for"
+										}
+									]
+								},
+								"description": "Given the product ID, return the product details"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": 1,\n \"code\": \"PRD001\",\n \"name\": \"Product Name\",\n \"description\": \"This is a product description.\",\n \"image\": \"https://example.com/image.png\",\n \"category\": \"Category 1\",\n \"price\": 99.99,\n \"quantity\": 10,\n \"internalReference\": \"INTREF001\",\n \"shellId\": 1,\n \"inventoryStatus\": \"INSTOCK\",\n \"rating\": 4.5,\n \"createdAt\": 1622547800,\n \"updatedAt\": 1622547900\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Product not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Update details of a product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Product name is updated\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.name).to.eql(\"Updated Product Name\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let productId = pm.environment.get(\"productId\");\r",
+											"if (productId) {\r",
+											"    pm.request.url = pm.request.url.toString().replace(':id', productId);\r",
+											"} else {\r",
+											"    console.error(\"Product ID is not defined in the environment\");\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"PRD001\",\n  \"name\": \"Updated Product Name\",\n  \"description\": \"This is a product description.\",\n  \"image\": \"https://example.com/image.png\",\n  \"category\": \"Category 1\",\n  \"price\": 99.99,\n  \"quantity\": 10,\n  \"internalReference\": \"INTREF001\",\n  \"shellId\": 1,\n  \"inventoryStatus\": \"INSTOCK\",\n  \"rating\": 4.5\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ":id",
+											"description": "(Required) Product ID to update"
+										}
+									]
+								},
+								"description": "Update the product details if it exists"
+							},
+							"response": [
+								{
+									"name": "Product not found",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad request",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Product updated",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": 1,\n \"code\": \"PRD001\",\n \"name\": \"Product Name\",\n \"description\": \"This is a product description.\",\n \"image\": \"https://example.com/image.png\",\n \"category\": \"Category 1\",\n \"price\": 99.99,\n \"quantity\": 10,\n \"internalReference\": \"INTREF001\",\n \"shellId\": 1,\n \"inventoryStatus\": \"INSTOCK\",\n \"rating\": 4.5,\n \"createdAt\": 1622547800,\n \"updatedAt\": 1622547900\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Remove a product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let productId = pm.environment.get(\"productId\");\r",
+											"if (productId) {\r",
+											"    pm.request.url = pm.request.url.toString().replace(':id', productId);\r",
+											"} else {\r",
+											"    console.error(\"Product ID is not defined in the environment\");\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/v1/products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ":id"
+										}
+									]
+								},
+								"description": "Deletes a product by the given ID"
+							},
+							"response": [
+								{
+									"name": "Product not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Product deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/v1/products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create a new product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has Product ID\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"});\r",
+									"\r",
+									"console.log(pm.response.json());\r",
+									"\r",
+									"try {\r",
+									"    var response = pm.response.json();\r",
+									"    if (response && response.id) {\r",
+									"        pm.environment.set(\"productId\", response.id);\r",
+									"                console.info(\"ID set correctly\");\r",
+									"\r",
+									"        var productId = pm.environment.get(\"productId\");\r",
+									"        console.info(productId);\r",
+									"\r",
+									"\r",
+									"    } else {\r",
+									"        console.error(\"ID not found in the response\");\r",
+									"    }\r",
+									"} catch (e) {\r",
+									"    console.error(\"Error parsing response:\", e);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"PRD002\",\n  \"name\": \"Product Name\",\n  \"description\": \"This is a product description.\",\n  \"image\": \"https://example.com/image.png\",\n  \"category\": \"Category 1\",\n  \"price\": 99.99,\n  \"quantity\": 10,\n  \"internalReference\": \"INTREF001\",\n  \"shellId\": 1,\n  \"inventoryStatus\": \"INSTOCK\",\n  \"rating\": 4.5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						},
+						"description": "Creates a new product with the provided information"
+					},
+					"response": [
+						{
+							"name": "Product created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": 1,\n \"code\": \"PRD001\",\n \"name\": \"Product Name\",\n \"description\": \"This is a product description.\",\n \"image\": \"https://example.com/image.png\",\n \"category\": \"Category 1\",\n \"price\": 99.99,\n \"quantity\": 10,\n \"internalReference\": \"INTREF001\",\n \"shellId\": 1,\n \"inventoryStatus\": \"INSTOCK\",\n \"rating\": 4.5,\n \"createdAt\": 1622547800,\n \"updatedAt\": 1622547900\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"code\": \"PRD001\",\n    \"name\": \"Product Name\",\n    \"description\": \"This is a product description.\",\n    \"image\": \"https://example.com/image.png\",\n    \"category\": \"Category 1\",\n    \"price\": 99.99,\n    \"quantity\": 10,\n    \"internalReference\": \"INTREF001\",\n    \"shellId\": 1,\n    \"inventoryStatus\": \"INSTOCK\",\n    \"rating\": 4.5,\n    \"createdAt\": 1622547800,\n    \"updatedAt\": 1622547900\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Retrieve all products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.environment.set(\"variable_key\", \"variable_value\");\r",
+									"    var products = pm.response.json().products;\r",
+									"    pm.expect(products).to.be.an('array');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Returns a list of all products"
+					},
+					"response": [
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/v1/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/v1/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n {\n  \"id\": 1,\n  \"code\": \"PRD001\",\n  \"name\": \"Product Name\",\n  \"description\": \"This is a product description.\",\n  \"image\": \"https://example.com/image.png\",\n  \"category\": \"Category 1\",\n  \"price\": 99.99,\n  \"quantity\": 10,\n  \"internalReference\": \"INTREF001\",\n  \"shellId\": 1,\n  \"inventoryStatus\": \"INSTOCK\",\n  \"rating\": 4.5,\n  \"createdAt\": 1622547800,\n  \"updatedAt\": 1622547900\n },\n {\n  \"id\": 1,\n  \"code\": \"PRD001\",\n  \"name\": \"Product Name\",\n  \"description\": \"This is a product description.\",\n  \"image\": \"https://example.com/image.png\",\n  \"category\": \"Category 1\",\n  \"price\": 99.99,\n  \"quantity\": 10,\n  \"internalReference\": \"INTREF001\",\n  \"shellId\": 1,\n  \"inventoryStatus\": \"INSTOCK\",\n  \"rating\": 4.5,\n  \"createdAt\": 1622547800,\n  \"updatedAt\": 1622547900\n }\n]"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "localhost:8080"
+		},
+		{
+			"key": "productId",
+			"value": ""
+		}
+	]
+}

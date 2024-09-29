@@ -1,0 +1,223 @@
+openapi: 3.0.2
+info:
+  title: API REST Products
+  version: '1.0'
+  description: API for managing products
+servers:
+  - url: localhost:8080/
+tags:
+  - name: Products
+paths:
+  /v1/products:
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      description: Creates a new product with the provided information
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      tags:
+        - Products
+      summary: Retrieve all products
+      description: Returns a list of all products with optional pagination.
+      operationId: getAllProducts
+      parameters:
+        - name: page
+          in: query
+          description: The page number to retrieve (0-based).
+          required: false
+          schema:
+            type: integer
+            example: 0
+        - name: size
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProducts'
+        '500':
+          description: Internal server error
+
+  /v1/products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Retrieve details for a product
+      description: Given the product ID, return the product details
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          description: Product ID to retrieve details for
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+    patch:
+      tags:
+        - Products
+      summary: Update details of a product
+      description: Update the product details if it exists
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          description: Product ID to update
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+    delete:
+      tags:
+        - Products
+      summary: Remove a product
+      description: Deletes a product by the given ID
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          description: Product ID to delete
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: Product deleted
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        code:
+          type: string
+          example: "PRD001"
+        name:
+          type: string
+          example: "Product Name"
+        description:
+          type: string
+          example: "This is a product description."
+        image:
+          type: string
+          example: "https://example.com/image.png"
+        category:
+          type: string
+          example: "Category 1"
+        price:
+          type: number
+          format: float
+          example: 99.99
+        quantity:
+          type: integer
+          example: 10
+        internalReference:
+          type: string
+          example: "INTREF001"
+        shellId:
+          type: integer
+          example: 1
+        inventoryStatus:
+          type: string
+          enum:
+            - INSTOCK
+            - LOWSTOCK
+            - OUTOFSTOCK
+          example: "INSTOCK"
+        rating:
+          type: number
+          format: float
+          example: 4.5
+        createdAt:
+          type: integer
+          format: int64
+          example: 1622547800
+        updatedAt:
+          type: integer
+          format: int64
+          example: 1622547900
+
+    PaginatedProducts:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        totalElements:
+          type: integer
+          description: Total number of products.
+        totalPages:
+          type: integer
+          description: Total number of pages.
+        size:
+          type: integer
+          description: The size of the page.
+        number:
+          type: integer
+          description: The current page number.
